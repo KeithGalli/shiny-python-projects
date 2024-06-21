@@ -21,6 +21,7 @@ def dat():
     df = pd.read_csv(infile)
     df["order_date"] = pd.to_datetime(df["order_date"])
     df["month"] = df["order_date"].dt.month_name()
+    df["value"] = df["quantity_ordered"] * df["price_each"]
     return df
 
 
@@ -85,12 +86,42 @@ with ui.layout_column_wrap(width=1 / 2):
                 return fig
 
         with ui.nav_panel("Top Sellers Value ($)"):
-            "Bar Chart Top Sellers Value"
+            @render_plotly
+            def plot_top_value():
+                df = dat()
+                top_sales = (
+                    df.groupby("product")["value"]
+                    .sum()
+                    .nlargest(input.n())
+                    .reset_index()
+                )
+                fig = px.bar(top_sales, x="product", y="value")
+                return fig
 
         with ui.nav_panel("Lowest Sellers"):
-            "Bar Chart Lowest Sellers"
+            @render_plotly
+            def plot_lowest_sellers():
+                df = dat()
+                top_sales = (
+                    df.groupby("product")["quantity_ordered"]
+                    .sum()
+                    .nsmallest(input.n())
+                    .reset_index()
+                )
+                fig = px.bar(top_sales, x="product", y="quantity_ordered")
+                return fig
         with ui.nav_panel("Lowest Sellers Value ($)"):
-            "Bar Chart Lowest Sellers Value"
+            @render_plotly
+            def plot_lowest_value():
+                df = dat()
+                top_sales = (
+                    df.groupby("product")["value"]
+                    .sum()
+                    .nsmallest(input.n())
+                    .reset_index()
+                )
+                fig = px.bar(top_sales, x="product", y="value")
+                return fig
 
     with ui.card():
         "Heatmap here"
