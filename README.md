@@ -18,8 +18,7 @@ This project walks through the basics of Shiny, how reactivity works, how to cus
 Walks through the basics of getting started with Shiny for Python and we build
 and deploy a simple app by the end of the video.
 
-[Finished Source
-Code](https://github.com/KeithGalli/shiny-python-projects/tree/video1/sales)
+[Finished Source Code](https://github.com/KeithGalli/shiny-python-projects/tree/video1/sales)
 
 [Video Link](https://youtu.be/I2W7i7QyJPI?si=4gQSbdKbF50SX3uO)
 
@@ -30,7 +29,17 @@ Code](https://github.com/KeithGalli/shiny-python-projects/tree/video1/sales)
 Walks through the important concept of reactivity in Shiny and how we can add
 and manage the interactivity of our Python applications.
 
-[Finished Source
-Code](https://github.com/KeithGalli/shiny-python-projects/tree/video2/sales)
+[Finished Source Code](https://github.com/KeithGalli/shiny-python-projects/tree/video2/sales)
 
 [Video Link](https://youtu.be/SLkA-Z8HTAE?si=DE0xSYtlJ0ym6lw8)
+
+### Part 3: How to make your Python Dashboard look Professional! (Layouts in Shiny)
+
+<img src='./assets/video3.png' width=50%>
+
+We focus on enhancing the visual appeal and structure of your Shiny dashboards
+using various layout components.
+
+[Finished Source Code](https://github.com/KeithGalli/shiny-python-projects/tree/video3/sales)
+
+[Video Link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
