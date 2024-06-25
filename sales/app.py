@@ -30,22 +30,6 @@ def apply_common_styles(fig):
     )
     return fig
 
-import ipyleaflet as ipyl
-
-city_centers = {
-    "London": (51.5074, 0.1278),
-    "Paris": (48.8566, 2.3522),
-    "New York": (40.7128, -74.0060)
-}
-
-ui.input_select("center", "Center", choices=list(city_centers.keys()))
-
-@render_widget
-def map():
-    print("TYPE TYPE", type(ipyl.Map(zoom=4)))
-    return ipyl.Map(zoom=4)
-
-
 @reactive.calc
 def dat():
     infile = Path(__file__).parent / "data/sales.csv"
@@ -81,21 +65,8 @@ with ui.card(full_screen=True):
         @render_altair
         def sales_over_time():
             df = dat()
-            # Define the order of the months to ensure they appear chronologically
-            month_order = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ]
+
+            month_order = calendar.month_name[1:]
 
             # Creating a month order for sorting in Altair
             df["month"] = pd.Categorical(
@@ -263,8 +234,6 @@ with ui.navset_card_underline():
             # Add HeatMap to the map
             HeatMap(heatmap_data).add_to(map)
 
-            print("TYPE OF FOLIUM", type(map))
-            print(map._repr_html_())
             return map
 
 
