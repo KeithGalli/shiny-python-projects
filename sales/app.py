@@ -153,4 +153,4 @@ with ui.card():
 
     @render.data_frame
     def sample_sales_data():
-        return render.DataTable(dat().head(100), selection_mode="row", filters=True)
+        return dat().head(1000)
