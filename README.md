@@ -43,3 +43,13 @@ using various layout components.
 [Finished Source Code](https://github.com/KeithGalli/shiny-python-projects/tree/video3/sales)
 
 [Video Link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
+### Part 4: How to combine Matplotlib, Plotly, Seaborn, and more in a single Python Dashboard!
+
+<img src='./assets/video4.png' width=50%>
+
+We show how we can render various types of visualizations within Shiny.
+
+[Finished Source Code](https://github.com/KeithGalli/shiny-python-projects/tree/video4/sales)
+
+[Video Link](https://youtu.be/dQw4w9WgXcQ?si=0JJvt-tTj68fna4i)
