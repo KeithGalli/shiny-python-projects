@@ -16,7 +16,38 @@ from shiny import reactive
 from shiny.express import render, input, ui
 from shinywidgets import render_plotly, render_altair, render_widget
 
-ui.page_opts(title="Sales Dashboard - Video 4 of 5", fillable=False)
+ui.tags.style(
+    """
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centers the content horizontally */
+        height: 60px;
+    }
+
+    .logo-container {
+        margin-right: 5px; /* Adjust the spacing as needed */
+        height: 100% !important;
+        padding: 10px;
+    }
+
+    .logo-container img {
+        height: 40px;
+    }
+
+    .title-container h2 {
+        color: white;
+        padding: 5px;
+        margin: 0;
+    }
+
+    body {
+        background-color: #5DADE2;
+    }
+    """
+)
+
+ui.page_opts(window_title="Sales Dashboard - Video 5 of 5", fillable=False)
 
 @reactive.calc
 def dat():
@@ -27,6 +58,17 @@ def dat():
     df["hour"] = df["order_date"].dt.hour
     df['value'] = df['quantity_ordered'] * df['price_each']
     return df
+
+with ui.div(class_="header-container"):
+    with ui.div(class_="logo-container"):
+        @render.image  
+        def image():
+            here = Path(__file__).parent
+            img = {"src": here / "images/shiny-logo.png"}  
+            return img
+        
+    with ui.div(class_="title-container"):
+        ui.h2("Sales Dashboard - Video 5 of 5")
 
 with ui.card():  
     ui.card_header("Sales by City 2023")
