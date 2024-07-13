@@ -44,8 +44,32 @@ ui.tags.style(
     body {
         background-color: #5DADE2;
     }
+
+    .modebar{
+        display: none;
+    }
     """
 )
+
+FONT_COLOR = "#4C78A8"
+FONT_TYPE = "Arial"
+
+def style_plotly_chart(fig, yaxis_title):
+    fig.update_layout(
+        xaxis_title='',  # Remove x-axis label
+        yaxis_title=yaxis_title,  # Change y-axis label
+        plot_bgcolor='rgba(0,0,0,0)',  # Remove background color
+        showlegend=False,  # Remove the legend
+        coloraxis_showscale=False,
+        font=dict(
+            family='Arial',
+            size=12,
+            color=FONT_COLOR
+        )
+    )
+    fig.update_xaxes(showgrid=False)
+    fig.update_yaxes(showgrid=False)
+    return fig
 
 ui.page_opts(window_title="Sales Dashboard - Video 5 of 5", fillable=False)
 
@@ -106,13 +130,19 @@ with ui.card():
             # Define the order of months
             month_orders = list(calendar.month_name)[1:]
 
+            font_props = alt.Axis(labelFont='Arial', labelColor=FONT_COLOR, titleFont='Arial', titleColor=FONT_COLOR, tickSize=0, labelAngle=0)
             # Create the bar chart
-            chart = alt.Chart(sales_by_city).mark_bar().encode(
-                x=alt.X('month', sort=month_orders),
-                y='quantity_ordered',
+            chart = alt.Chart(sales_by_city).mark_bar(color='#3485BF').encode(
+                x=alt.X('month', sort=month_orders, title='Month', axis=font_props),
+                y=alt.Y('quantity_ordered', title='Quantity Ordered', axis=font_props),
                 tooltip=['month', 'quantity_ordered']
             ).properties(
-                title=f"Sales over Time -- {input.city()}"
+                title=alt.Title(f"Sales over Time -- {input.city()}")
+            ).configure_axis(
+                grid=False
+            ).configure_title(
+                font='Arial',
+                color=FONT_COLOR
             )
 
             return chart
@@ -125,16 +155,28 @@ with ui.layout_column_wrap(width=1/2):
             def plot_top_sellers():
                 df = dat()
                 top_sales = df.groupby('product')['quantity_ordered'].sum().nlargest(input.n()).reset_index()
-                fig = px.bar(top_sales, x='product', y='quantity_ordered')
-                return fig
+                
+                # Create the bar chart
+                fig = px.bar(top_sales, x='product', y='quantity_ordered', 
+                            color='quantity_ordered', color_continuous_scale='Blues')
 
+                # Apply the standardized style
+                fig = style_plotly_chart(fig, "Quantity Ordered")
+                
+                return fig
+            
         with ui.nav_panel("Top Sellers Value ($)"):
 
             @render_plotly
             def plot_top_sellers_value():
                 df = dat()
                 top_sales = df.groupby('product')['value'].sum().nlargest(input.n()).reset_index()
-                fig = px.bar(top_sales, x='product', y='value')
+                # Create the bar chart
+                fig = px.bar(top_sales, x='product', y='value', 
+                            color='value', color_continuous_scale='Blues')
+
+                # Apply the standardized style
+                fig = style_plotly_chart(fig, "Total Sales ($)")
                 return fig
 
         with ui.nav_panel("Lowest Sellers"):
@@ -143,7 +185,12 @@ with ui.layout_column_wrap(width=1/2):
             def plot_lowest_sellers():
                 df = dat()
                 top_sales = df.groupby('product')['quantity_ordered'].sum().nsmallest(input.n()).reset_index()
-                fig = px.bar(top_sales, x='product', y='quantity_ordered')
+                # Create the bar chart
+                fig = px.bar(top_sales, x='product', y='quantity_ordered', 
+                            color='quantity_ordered', color_continuous_scale='Reds')
+
+                # Apply the standardized style
+                fig = style_plotly_chart(fig, "Quantity Ordered")
                 return fig
 
         with ui.nav_panel("Lowest Sellers Value ($)"):
@@ -151,7 +198,11 @@ with ui.layout_column_wrap(width=1/2):
             def plot_lowest_sellers_value():
                 df = dat()
                 top_sales = df.groupby('product')['value'].sum().nsmallest(input.n()).reset_index()
-                fig = px.bar(top_sales, x='product', y='value')
+                fig = px.bar(top_sales, x='product', y='value', 
+                            color='value', color_continuous_scale='Reds')
+
+                # Apply the standardized style
+                fig = style_plotly_chart(fig, "Total Sales ($)")
                 return fig
 
 
@@ -166,14 +217,18 @@ with ui.layout_column_wrap(width=1/2):
             sns.heatmap(heatmap_data,
                         annot=True,
                         fmt="d",
-                        cmap="coolwarm",
+                        cmap="Blues",
                         cbar=False,
                         xticklabels=[],
                         yticklabels=[f"{i}:00" for i in range(24)])
             
-            plt.title("Number of Orders by Hour of Day")
-            plt.xlabel("Hour of Day")
-            plt.ylabel("Order Count")
+            # plt.title("Number of Orders by Hour of Day")
+            plt.xlabel("Order Count", color=FONT_COLOR, fontname=FONT_TYPE)
+            plt.ylabel("Hour of Day", color=FONT_COLOR, fontname=FONT_TYPE)
+            
+            # Change the tick label color and font
+            plt.yticks(color=FONT_COLOR, fontname=FONT_TYPE)
+            plt.xticks(color=FONT_COLOR, fontname=FONT_TYPE)
             
 
 
@@ -186,7 +241,19 @@ with ui.card():
         heatmap_data = df[['lat','long','quantity_ordered']].values
 
         map = folium.Map(location=[37.0902, -95.7129], zoom_start=4)
-        HeatMap(heatmap_data).add_to(map)
+        # Define a blue gradient
+        blue_gradient = {
+            0.0: "#E3F2FD",
+            0.2: "#BBDEFB",
+            0.4: "#64B5F6",
+            0.6: "#42A5F5",
+            0.8: "#2196F3",
+            1.0: "#1976D2",
+        }
+
+        # Add the heatmap layer with the blue gradient
+        HeatMap(heatmap_data, gradient=blue_gradient).add_to(map)
+        
         return map
     
 
